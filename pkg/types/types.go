@@ -15,8 +15,8 @@ type Website struct {
 }
 
 type CreateWebsiteRequest struct {
-	URL                  string `json:"url,omitempty"`
-	ProbeScheduleMinutes int    `json:"probe_schedule_minutes,omitempty"`
+	URL                  string `json:"url,omitempty" binding:"required,url"`
+	ProbeScheduleMinutes int    `json:"probe_schedule_minutes,omitempty" binding:"required,gte=1"`
 }
 
 func MapWebsites(source []db.WebsiteProbes) []Website {
