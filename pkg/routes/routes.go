@@ -1,9 +1,23 @@
 package routes
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+	"github.com/mvanbrummen/website-uptime-probe/pkg/db"
+	"github.com/mvanbrummen/website-uptime-probe/pkg/types"
+)
 
-func RegisterRoutes(g *gin.Engine) {
+func RegisterRoutes(r *gin.Engine, probesDao *db.ProbesDao) {
 
-	g.GET("/health", HealthRoute)
+	v1 := r.Group("/v1")
+	{
+		v1.GET("/health", HealthRoute)
+		v1.GET("/websites", func(c *gin.Context) {
+			w := probesDao.GetWebsites()
+
+			websites := types.MapWebsites(w)
+
+			c.JSON(200, websites)
+		})
+	}
 
 }

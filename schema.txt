@@ -1,0 +1,28 @@
+WebsiteProbes
+
+
+PK       			           SK       								ATTRs
+	  
+WEBSITE#					WEBSITE#<websiteURL>                    probeScehdule      createdDate modifiedDate     enabled     
+
+
+WEBSITE#<websiteURL>#PROBE        <timestamp>                            httpstatus   responsebody responsetime
+
+
+
+
+
+
+## Access patterns
+
+
+Get all monitored websites   
+
+
+Get all monitored websites probe schedules 
+
+
+Get all probe results for a website for a date range
+
+
+

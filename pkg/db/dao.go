@@ -6,12 +6,18 @@ import (
 	"github.com/guregu/dynamo"
 )
 
+const (
+	WebsiteProbesTable = "WebsiteProbes"
+	WebsitePK          = "WEBSITE#"
+	WebsiteSKPrefix    = "WEBSITE#"
+)
+
 type WebsiteProbes struct {
 	PK string `dynamo:",hash"`
 	SK string `dynamo:",range"`
 
 	ProbeAttributes
-	WebiteAttributes
+	WebsiteAttributes
 }
 
 type ProbeAttributes struct {
@@ -20,7 +26,7 @@ type ProbeAttributes struct {
 	ResponseStatus     int    `dynamo:"ResponseStatus"`
 }
 
-type WebiteAttributes struct {
+type WebsiteAttributes struct {
 	ProbeScheduleMinutes int       `dynamo:"ProbeScheduleMinutes"`
 	CreatedDate          time.Time `dynamo:"CreatedDate"`
 	Active               bool      `dynamo:"Active"`
@@ -37,6 +43,12 @@ func NewProbesDao(db *dynamo.DB) *ProbesDao {
 }
 
 func (d *ProbesDao) GetWebsites() []WebsiteProbes {
-	// TODO
-	return []WebsiteProbes{}
+	t := d.DB.Table(WebsiteProbesTable)
+
+	var websites []WebsiteProbes
+	t.Get("PK", WebsitePK).
+		Range("SK", dynamo.BeginsWith, WebsiteSKPrefix).
+		All(&websites)
+
+	return websites
 }
