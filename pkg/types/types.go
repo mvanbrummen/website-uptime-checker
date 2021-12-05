@@ -14,6 +14,11 @@ type Website struct {
 	ProbeScheduleMinutes int       `json:"probe_schedule_minutes,omitempty"`
 }
 
+type CreateWebsiteRequest struct {
+	URL                  string `json:"url,omitempty"`
+	ProbeScheduleMinutes int    `json:"probe_schedule_minutes,omitempty"`
+}
+
 func MapWebsites(source []db.WebsiteProbes) []Website {
 	var websites []Website
 	for _, w := range source {
@@ -25,4 +30,13 @@ func MapWebsites(source []db.WebsiteProbes) []Website {
 		})
 	}
 	return websites
+}
+
+func MapWebsite(source *db.WebsiteProbes) *Website {
+	return &Website{
+		URL:                  strings.Replace(source.SK, db.WebsiteSKPrefix, "", 1),
+		Active:               source.Active,
+		CreatedDate:          source.CreatedDate,
+		ProbeScheduleMinutes: source.ProbeScheduleMinutes,
+	}
 }

@@ -52,3 +52,26 @@ func (d *ProbesDao) GetWebsites() []WebsiteProbes {
 
 	return websites
 }
+
+func (d *ProbesDao) PutWebsite(url string, probeScheduleMinutes int) (*WebsiteProbes, error) {
+	t := d.DB.Table(WebsiteProbesTable)
+
+	newWebsite := &WebsiteProbes{
+		PK: WebsitePK,
+		SK: WebsiteSKPrefix + url,
+
+		WebsiteAttributes: WebsiteAttributes{
+			ProbeScheduleMinutes: probeScheduleMinutes,
+			Active:               true,
+			CreatedDate:          time.Now(),
+		},
+	}
+
+	err := t.Put(newWebsite).Run()
+
+	if err != nil {
+		return nil, err
+	}
+
+	return newWebsite, nil
+}
