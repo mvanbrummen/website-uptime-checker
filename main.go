@@ -6,6 +6,7 @@ import (
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/fvbock/endless"
 	"github.com/gin-gonic/gin"
 	"github.com/guregu/dynamo"
 	"github.com/mvanbrummen/website-uptime-probe/pkg/db"
@@ -49,5 +50,11 @@ func main() {
 
 	routes.RegisterRoutes(r, probesDao)
 
-	r.Run(":8080")
+	port := os.Getenv("PORT")
+
+	if port != "" {
+		endless.ListenAndServe(port, r)
+	} else {
+		endless.ListenAndServe(":8080", r)
+	}
 }
