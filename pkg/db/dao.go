@@ -42,6 +42,14 @@ func NewProbesDao(db *dynamo.DB) *ProbesDao {
 	}
 }
 
+func (d *ProbesDao) DeleteWebsite(url string) error {
+	t := d.DB.Table(WebsiteProbesTable)
+
+	error := t.Delete("PK", WebsitePK).Range("SK", WebsiteSKPrefix+url).Run()
+
+	return error
+}
+
 func (d *ProbesDao) GetWebsites() []WebsiteProbes {
 	t := d.DB.Table(WebsiteProbesTable)
 
