@@ -28,6 +28,11 @@ func RegisterRoutes(r *gin.Engine, probesDao *db.ProbesDao) {
 				return
 			}
 
+			if probesDao.GetWebsite(req.URL) == nil {
+				c.JSON(http.StatusNotFound, gin.H{"error": "Website not found"})
+				return
+			}
+
 			err := probesDao.DeleteWebsite(req.URL)
 
 			if err != nil {

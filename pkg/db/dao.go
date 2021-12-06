@@ -61,6 +61,17 @@ func (d *ProbesDao) GetWebsites() []WebsiteProbes {
 	return websites
 }
 
+func (d *ProbesDao) GetWebsite(url string) *WebsiteProbes {
+	t := d.DB.Table(WebsiteProbesTable)
+
+	var website *WebsiteProbes
+	t.Get("PK", WebsitePK).
+		Range("SK", dynamo.Equal, WebsiteSKPrefix+url).
+		One(&website)
+
+	return website
+}
+
 func (d *ProbesDao) PutWebsite(url string, probeScheduleMinutes int) (*WebsiteProbes, error) {
 	t := d.DB.Table(WebsiteProbesTable)
 
