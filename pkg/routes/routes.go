@@ -21,12 +21,14 @@ func RegisterRoutes(r *gin.Engine, probesDao *db.ProbesDao) {
 
 			c.JSON(http.StatusOK, websites)
 		})
-		v1.DELETE("/websites/:url", func(c *gin.Context) {
-			url := c.Param("url")
+		v1.DELETE("/websites", func(c *gin.Context) {
+			var req types.DeleteWebsiteRequest
+			if err := c.ShouldBindJSON(&req); err != nil {
+				c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+				return
+			}
 
-			log.Println(url)
-
-			err := probesDao.DeleteWebsite(url)
+			err := probesDao.DeleteWebsite(req.URL)
 
 			if err != nil {
 				internalServerError(c, err)
