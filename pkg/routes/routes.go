@@ -58,6 +58,14 @@ func RegisterRoutes(r *gin.Engine, probesDao *db.ProbesDao) {
 
 			c.JSON(http.StatusCreated, types.MapWebsite(website))
 		})
+
+		v1.GET("/websites/probes", func(c *gin.Context) {
+			url := c.Query("url")
+
+			probes := types.MapProbes(probesDao.GetWebsiteProbes(url))
+
+			c.JSON(http.StatusOK, probes)
+		})
 	}
 
 }

@@ -1,6 +1,7 @@
 package db
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/guregu/dynamo"
@@ -93,4 +94,14 @@ func (d *ProbesDao) PutWebsite(url string, probeScheduleMinutes int) (*WebsitePr
 	}
 
 	return newWebsite, nil
+}
+
+func (d *ProbesDao) GetWebsiteProbes(url string) []WebsiteProbes {
+	t := d.DB.Table(WebsiteProbesTable)
+
+	var websitesProbes []WebsiteProbes
+	t.Get("PK", fmt.Sprintf("%s%s#PROBE", WebsitePK, url)).
+		All(&websitesProbes)
+
+	return websitesProbes
 }
