@@ -105,3 +105,27 @@ func (d *ProbesDao) GetWebsiteProbes(url string) []WebsiteProbes {
 
 	return websitesProbes
 }
+
+// TODO fix this as it times out
+func (d *ProbesDao) PutWebsiteProbe(url, responseBody string, responseStatus, responseTimeMillis int) (*WebsiteProbes, error) {
+	t := d.DB.Table(WebsiteProbesTable)
+
+	newWebsiteProbe := &WebsiteProbes{
+		PK: fmt.Sprintf("%s%s#PROBE", WebsitePK, url),
+		SK: time.Now().Format(time.RFC3339),
+
+		ProbeAttributes: ProbeAttributes{
+			ResponseBody:       responseBody,
+			ResponseTimeMillis: responseTimeMillis,
+			ResponseStatus:     responseStatus,
+		},
+	}
+
+	err := t.Put(newWebsiteProbe).Run()
+
+	if err != nil {
+		return nil, err
+	}
+
+	return newWebsiteProbe, nil
+}
